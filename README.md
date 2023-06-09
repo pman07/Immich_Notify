@@ -20,6 +20,8 @@ services:
     container_name: immich_notify
     env_file:
       - stack.env
+    volumes:
+      - /path/to/data.txt:/path/to/data.txt # optional, use to retain data through redeployment
     restart: unless-stopped
 ```
 
