@@ -12,7 +12,7 @@ Recommended setup via docker-compose
 
 ## docker-compose.yml
 ```
-version: "1.0"
+version: "3.8"
 
 services:
   immich_notify:
