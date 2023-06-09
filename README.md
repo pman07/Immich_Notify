@@ -1,4 +1,4 @@
-# Immich_Notify
+# Immich Notify
 This python script checks defined immich shared albums for added items and sends notifications via ntfy app.
 
 # Functionality
