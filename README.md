@@ -1,6 +1,12 @@
 # Immich_Notify
 This python script checks defined immich shared albums for added items and sends notifications via ntfy app.
 
+# Functionality
+Docker container runs python script every 30 minutes.
+If FILEPATH doesn't exist, it will first query albums for current item counts and create the file.
+If FILEPATH does exist, it will load saved item counts, query albums for current counts.
+If there are new items added, a notification will be published to NTFYURL topic
+
 # Setup
 Recommended setup via docker-compose
 
