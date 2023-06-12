@@ -11,7 +11,7 @@ FILE_PATH = os.environ.get('FILEPATH')
 ALBUMS = ast.literal_eval(os.environ['ALBUMS'])
 NTFY_URL = os.environ.get('NTFYURL')
 NTFY_ICON = os.environ.get('NTFYICON')
-DEBUG = os.environ.get('DEBUG')
+DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 
 def check(host, port, timeout=1):
@@ -60,7 +60,7 @@ def get_album_contents(uuid, imkey):
     response = requests.request("GET", url, headers=headers, data=payload)
 
     a = response.json()
-    print(a)
+
     album_name = a['albumName']
     count = a['assetCount']
 
