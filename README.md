@@ -10,7 +10,7 @@ If there are new items added, a notification will be published to NTFYURL topic.
 # Setup
 Recommended setup via docker-compose
 
-## docker-compose.yml
+## Just the Notify Script docker-compose.yml
 ```
 version: "3.8"
 
@@ -22,6 +22,38 @@ services:
       - stack.env
     volumes:
       - /path/to/data.txt:/path/to/data.txt # optional, use to retain data through redeployment
+    restart: unless-stopped
+```
+## Self-Hosted NTFY and Notify Script docker-compose.yml
+```
+version: "3.8"
+
+services:
+  immich_notify:
+    image: pierson07/immich_notify:latest
+    container_name: immich_notify
+    env_file:
+      - stack.env
+    volumes:
+      - /path/to/data.txt:/path/to/data.txt # optional, use to retain data through redeployment
+    restart: unless-stopped
+    
+  ntfy:
+    image: binwiederhier/ntfy
+    container_name: ntfy
+    command:
+      - serve
+    volumes:
+      - /var/cache/ntfy:/var/cache/ntfy
+      - /etc/ntfy:/etc/ntfy
+    ports:
+      - 80:80
+    healthcheck: # optional: remember to adapt the host:port to your environment
+        test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
     restart: unless-stopped
 ```
 
