@@ -50,5 +50,5 @@ ALBUMS={'albumID1': 'topic1','albumID2': 'topic2', ...}
 NTFYURL=<ntfy URL>
 
 # Icon to use for ntfy notification
-NTFYICON=https://raw.githubusercontent.com/immich-app/immich/53adb0c5150cc8af7c551f7a3059df83c45c2930/design/immich-logo.svg
+NTFYICON=https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo-no-outline.png
 ```
