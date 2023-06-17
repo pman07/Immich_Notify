@@ -85,7 +85,7 @@ NTFYURL=<ntfy URL>
 NTFYICON=https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo-no-outline.png
 ```
 
-## server.yml (only needed for self hosted w/ iOS notifications)
+## server.yml (only needed for self hosted ntfy w/ iOS notifications)
 ```
 # ntfy server config file
 #
