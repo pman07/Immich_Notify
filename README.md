@@ -59,8 +59,8 @@ services:
 
 ## stack.env
 ```
-# Base url to access API
-# example: http://192.168.1.100:
+# Base url and port to access API
+# example: http://192.168.1.100:2283
 BASEURL=<Internal Immich URL to lookup album info>
 
 # External url to access albums via notification link
