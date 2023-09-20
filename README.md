@@ -83,6 +83,9 @@ NTFYURL=<ntfy URL>
 
 # Icon to use for ntfy notification
 NTFYICON=https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo-no-outline.png
+
+# OPTIONAL Basic Authorization Token
+AUTHORIZATION_KEY=<Basic Authorization Key>
 ```
 
 ## server.yml (only needed for self hosted ntfy w/ iOS notifications)
