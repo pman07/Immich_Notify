@@ -2,7 +2,7 @@ import os
 import ast
 import socket
 import requests
-
+from urllib.parse import urlparse
 
 IMMICH_KEY = os.environ.get('IMMICHKEY')
 BASE_URL = os.environ.get('BASEURL')
@@ -12,6 +12,12 @@ ALBUMS = ast.literal_eval(os.environ['ALBUMS'])
 NTFY_URL = os.environ.get('NTFYURL')
 NTFY_ICON = os.environ.get('NTFYICON')
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
+
+
+if 'AUTHORIZATION_KEY' in os.environ:
+    AUTHORIZATION_KEY = os.environ.get('AUTHORIZATION_KEY')
+else:
+    AUTHORIZATION_KEY = ''
 
 
 def check(host, port, timeout=1):
@@ -67,8 +73,18 @@ def get_album_contents(uuid, imkey):
     return album_name, count
 
 
-def ntfy_notification(ntfyurl, ntfytitle, ntfymessage, ntfylink):
-    requests.post(ntfyurl,
+def ntfy_notification(ntfyurl, ntfytitle, ntfymessage, ntfylink, authorization=''):
+    if authorization != '':
+        requests.post(ntfyurl,
+                  data=ntfymessage.encode('utf-8'),
+                  headers={
+                      "Title": ntfytitle,
+                      "Click": ntfylink,
+                      "Icon": NTFY_ICON,
+                      "Authorization": "Basic " + authorization
+                  })
+    else:
+        requests.post(ntfyurl,
                   data=ntfymessage.encode('utf-8'),
                   headers={
                       "Title": ntfytitle,
@@ -82,7 +98,9 @@ if __name__ == '__main__':
     total_items_stored = []
     albums = {}
 
-    if check('192.168.1.80', 2283):
+    url = urlparse(BASE_URL)
+
+    if check(url.hostname, url.port):
         if os.path.exists(FILE_PATH):
             if DEBUG:
                 print('File Exists')
@@ -131,7 +149,7 @@ if __name__ == '__main__':
                     else:
                         message = 'Photo added to ' + albums[album]['title'] + '!'
 
-                    ntfy_notification(url, title, message, link)
+                    ntfy_notification(url, title, message, link, AUTHORIZATION_KEY)
 
         else:
             for key in ALBUMS:
