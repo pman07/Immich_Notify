@@ -39,8 +39,8 @@ def save_data(file_path, dictionary):
                 file.write(str(dictionary[key]['total items']) + '\n')
         if DEBUG:
             print("Data stored successfully!")
-    except IOError:
-        print(IOError)
+    except IOError as error:
+        print(error)
         print("An error occurred while saving the file.")
 
 
@@ -51,8 +51,8 @@ def read_data(file_path):
             for string in file:
                 tmp.append(int(string.strip()))
         return tmp
-    except IOError:
-        print(IOError)
+    except IOError as error:
+        print(error)
         print("An error occurred while loading the file.")
 
 
