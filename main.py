@@ -40,6 +40,7 @@ def save_data(file_path, dictionary):
         if DEBUG:
             print("Data stored successfully!")
     except IOError:
+        print(IOError)
         print("An error occurred while saving the file.")
 
 
@@ -51,6 +52,7 @@ def read_data(file_path):
                 tmp.append(int(string.strip()))
         return tmp
     except IOError:
+        print(IOError)
         print("An error occurred while loading the file.")
 
 
