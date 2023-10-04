@@ -119,8 +119,12 @@ if __name__ == '__main__':
                     print("Topic: ", topic)
                     print("Album ID: ", album)
                 tmp_title, tmp_total = get_album_contents(album, IMMICH_KEY)
-                albums[album] = {'topic': topic, 'title': tmp_title, 'total items': tmp_total,
-                                 'stored items': total_items_stored[index]}
+                if index < len(total_items_stored):
+                    albums[album] = {'topic': topic, 'title': tmp_title, 'total items': tmp_total,
+                                     'stored items': total_items_stored[index]}
+                else:
+                    albums[album] = {'topic': topic, 'title': tmp_title, 'total items': tmp_total,
+                                     'stored items': tmp_total}
                 index += 1
 
             if DEBUG:
