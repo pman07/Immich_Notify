@@ -84,6 +84,12 @@ NTFYURL=<ntfy URL>
 # Icon to use for ntfy notification
 NTFYICON=https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo-no-outline.png
 
+# OPTIONAL Email Address for NTFY Email Notifications if server configured
+EMAIL=nobody@example.com
+
+# OPTIONAL Email Tag for NTFY Email Notification Emoji/Tag see https://docs.ntfy.sh/emojis/
+EMAILTAG=camera
+
 # OPTIONAL Basic Authorization Token
 AUTHORIZATION_KEY=<Basic Authorization Key>
 ```
