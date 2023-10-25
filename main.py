@@ -12,6 +12,7 @@ ALBUMS = ast.literal_eval(os.environ['ALBUMS'])
 NTFY_URL = os.environ.get('NTFYURL')
 NTFY_ICON = os.environ.get('NTFYICON')
 EMAIL = os.getenv('EMAIL') or ''
+TAG = os.getenv('EMAILTAG') or ''
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 
@@ -96,18 +97,21 @@ def ntfy_notification(ntfyurl, ntfytitle, ntfymessage, ntfylink, authorization='
                       })
 
 
-def ntfy_email(ntfyurl, ntfymessage, ntfyemail, authorization=''):
+def ntfy_email(ntfyurl, ntfymessage, ntfyemail, ntfytag, authorization=''):
     if authorization != '':
         requests.post(ntfyurl,
                       data=ntfymessage,
                       headers={
                           "Email": ntfyemail,
+                          "Tags": ntfytag,
                           "Authorization": "Basic " + authorization
                       })
     else:
-        requests.post(ntfyurl, data=ntfymessage,
+        requests.post(ntfyurl,
+                      data=ntfymessage,
                       headers={
-                          "Email": ntfyemail
+                          "Email": ntfyemail,
+                          "Tags": ntfytag
                       })
 
 
@@ -174,7 +178,8 @@ if __name__ == '__main__':
                     ntfy_notification(url, title, message, link, AUTHORIZATION_KEY)
 
                     if EMAIL != '':
-                        ntfy_email(url, message, EMAIL, AUTHORIZATION_KEY)
+                        message = 'Immich - ' + message
+                        ntfy_email(url, message, EMAIL, TAG, AUTHORIZATION_KEY)
 
         else:
             for key in ALBUMS:
