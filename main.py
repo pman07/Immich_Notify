@@ -11,6 +11,7 @@ FILE_PATH = os.environ.get('FILEPATH')
 ALBUMS = ast.literal_eval(os.environ['ALBUMS'])
 NTFY_URL = os.environ.get('NTFYURL')
 NTFY_ICON = os.environ.get('NTFYICON')
+EMAIL = os.getenv('EMAIL') or ''
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
 
 
@@ -78,21 +79,36 @@ def get_album_contents(uuid, imkey):
 def ntfy_notification(ntfyurl, ntfytitle, ntfymessage, ntfylink, authorization=''):
     if authorization != '':
         requests.post(ntfyurl,
-                  data=ntfymessage.encode('utf-8'),
-                  headers={
-                      "Title": ntfytitle,
-                      "Click": ntfylink,
-                      "Icon": NTFY_ICON,
-                      "Authorization": "Basic " + authorization
-                  })
+                      data=ntfymessage.encode('utf-8'),
+                      headers={
+                          "Title": ntfytitle,
+                          "Click": ntfylink,
+                          "Icon": NTFY_ICON,
+                          "Authorization": "Basic " + authorization
+                      })
     else:
         requests.post(ntfyurl,
-                  data=ntfymessage.encode('utf-8'),
-                  headers={
-                      "Title": ntfytitle,
-                      "Click": ntfylink,
-                      "Icon": NTFY_ICON
-                  })
+                      data=ntfymessage.encode('utf-8'),
+                      headers={
+                          "Title": ntfytitle,
+                          "Click": ntfylink,
+                          "Icon": NTFY_ICON
+                      })
+
+
+def ntfy_email(ntfyurl, ntfymessage, ntfyemail, authorization=''):
+    if authorization != '':
+        requests.post(ntfyurl,
+                      data=ntfymessage,
+                      headers={
+                          "Email": ntfyemail,
+                          "Authorization": "Basic " + authorization
+                      })
+    else:
+        requests.post(ntfyurl, data=ntfymessage,
+                      headers={
+                          "Email": ntfyemail
+                      })
 
 
 if __name__ == '__main__':
@@ -156,6 +172,9 @@ if __name__ == '__main__':
                         message = 'Photo added to ' + albums[album]['title'] + '!'
 
                     ntfy_notification(url, title, message, link, AUTHORIZATION_KEY)
+
+                    if EMAIL != '':
+                        ntfy_email(url, message, EMAIL, AUTHORIZATION_KEY)
 
         else:
             for key in ALBUMS:
