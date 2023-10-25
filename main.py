@@ -178,7 +178,10 @@ if __name__ == '__main__':
                     ntfy_notification(url, title, message, link, AUTHORIZATION_KEY)
 
                     if EMAIL != '':
+                        topic = albums[album]['topic'] + '_email'
+                        url = NTFY_URL + '/' + topic
                         message = 'Immich - ' + message
+
                         ntfy_email(url, message, EMAIL, TAG, AUTHORIZATION_KEY)
 
         else:
