@@ -180,7 +180,7 @@ if __name__ == '__main__':
                     if EMAIL != '':
                         topic = albums[album]['topic'] + '_email'
                         url = NTFY_URL + '/' + topic
-                        message = 'Immich - ' + message
+                        message = 'Immich - ' + message + ' ' + link
 
                         ntfy_email(url, message, EMAIL, TAG, AUTHORIZATION_KEY)
 
