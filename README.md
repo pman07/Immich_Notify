@@ -8,6 +8,8 @@ If FILEPATH does exist, it will load saved item counts, query albums for current
 If there are new items added, a notification will be published to NTFYURL topic.
 
 ![image](https://github.com/pman07/Immich_Notify/assets/56171396/7aaf9ca1-e619-4075-9e58-2ac26eeccdc9)
+![image](https://github.com/pman07/Immich_Notify/assets/56171396/7c853b93-e181-4f21-a6a2-e00a18e80c6d)
+
 
 
 
