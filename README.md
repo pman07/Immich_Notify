@@ -2,13 +2,36 @@
 This python script checks defined immich shared albums for added items and sends notifications via ntfy app.
 
 # Functionality
-Docker container runs python script every 30 minutes.
+Docker container runs python script every 15 minutes by default.
 If FILEPATH doesn't exist, it will first query albums for current item counts and create the file.
 If FILEPATH does exist, it will load saved item counts, query albums for current counts.
 If there are new items added, a notification will be published to NTFYURL topic.
 
+![image](https://github.com/pman07/Immich_Notify/assets/56171396/7aaf9ca1-e619-4075-9e58-2ac26eeccdc9)
+
+
+
 # Setup
-Recommended setup via docker-compose
+Recommended setup via docker-compose below. Once docker container is running, visit <docker ip>:5000 (by default) in browser to configure the app.
+
+1. Configuration Setup. Fill out the following fields
+```
+  Immich Local URL: local path to hit API (ex: 192.168.1.1:2283)
+  Immich External URL: external path for notification link (ex: immich.com)
+  Immich API Key: api key for Immich (ex: abcdefghijkl)
+  ntfy URL: path to your ntfy instance (ex: ntfy.sh or 192.168.1.1:8080)
+  ntfy Icon URL: path to image for ntfy notifications (ex: https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo.png)
+  ntfy email: email address for ntfy email notifications (OPTIONAL)
+  ntfy email tag: email tag for ntfy email notification Emoji/Tag see https://docs.ntfy.sh/emojis/ (OPTIONAL)
+  ntfy authorization: ntfy Basic Authorization Token (OPTIONAL)
+  
+```
+2. Click "Save Config"
+3. Click "Get Shared Albums"
+4. Check the Shared Albums you want to monitor and fill out the topic(s) for each album
+5. Click "Save Shared Albums"
+6. Update the Notification Period (if desired). By default application will run every 15 minutes.
+7. Click "Start Notifications App"
 
 ## Just the Notify Script docker-compose.yml
 ```
@@ -59,39 +82,11 @@ services:
 
 ## stack.env
 ```
-# Base url and port to access API
-# example: http://192.168.1.100:2283
-BASEURL=<Internal Immich URL to lookup album info>
+# Filepath to store data (recommended to use external storage for data, otherwise config and data will be lost
+FILEPATH=./
 
-# External url to access albums via notification link
-# example: https://immich.fakeurl.com
-EXTERNALURL=<External Immich URL for notification link>
-
-# Immich API Key
-IMMICHKEY=<Immich API Key>
-
-# File to store album item counts
-FILEPATH=./data.txt
-
-# Dictionary with album id(s) and desired notification topic(s)
-# Can all be the same topic or divide up as desired
-ALBUMS={'albumID1': 'topic1','albumID2': 'topic2', ...}
-
-# ntfy URL to send notifications to
-# ntfy can be self hosted or use free or paid teirs of https://ntfy.sh
-NTFYURL=<ntfy URL>
-
-# Icon to use for ntfy notification
-NTFYICON=https://raw.githubusercontent.com/immich-app/immich/main/design/immich-logo-no-outline.png
-
-# OPTIONAL Email Address for NTFY Email Notifications if server configured
-EMAIL=nobody@example.com
-
-# OPTIONAL Email Tag for NTFY Email Notification Emoji/Tag see https://docs.ntfy.sh/emojis/
-EMAILTAG=camera
-
-# OPTIONAL Basic Authorization Token
-AUTHORIZATION_KEY=<Basic Authorization Key>
+# Debug flag (optional)
+DEBUG=False
 ```
 
 ## server.yml (only needed for self hosted ntfy w/ iOS notifications)
