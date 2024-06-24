@@ -73,7 +73,7 @@ def write_data(path, data):
 
 
 def get_album_contents(base_url, uuid, api_key):
-    url = base_url + "/api/album/" + uuid
+    url = base_url + "/api/albums/" + uuid
 
     payload = {}
     headers = {

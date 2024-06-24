@@ -73,7 +73,7 @@ def get_albums(config, saved):
     base_url = config["Immich Local URL"]
     api_key = config["Immich API Key"]
 
-    url = base_url + "/api/album?shared=true"
+    url = base_url + "/api/albums?shared=true"
 
     payload = {}
     headers = {
