@@ -61,6 +61,8 @@ services:
       - stack.env
     volumes:
       - /path/to/data.txt:/path/to/data.txt # optional, use to retain data through redeployment
+    ports:
+      - 5000:5000
     restart: unless-stopped
     
   ntfy:
