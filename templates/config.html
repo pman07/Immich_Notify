@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immich Notification Configuration</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            background-color: #121212; /* Dark background */
+            color: #fff; /* Light text */
+        }
+        h1, h2 {
+            text-align: center;
+            font-weight: 500;
+            color: #fff; /* Light text */
+            margin-bottom: 20px; /* Add spacing below headings */
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            color: #fff; /* Light text */
+        }
+        th, td {
+            border: 1px solid #333; /* Dark gray border */
+            padding: 10px;
+        }
+        th {
+            background-color: #333; /* Dark gray header background */
+            font-weight: 500;
+        }
+        .column {
+            float: left;
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .control {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #2196F3; /* Blue button */
+            color: #fff; /* White text */
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #1976D2; /* Darker blue on hover */
+        }
+        input[type="text"],
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd; /* Light gray border */
+            border-radius: 4px;
+            background-color: #303030; /* Dark gray background */
+            color: #fff; /* White text */
+            box-sizing: border-box;
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 10px; /* Adjust spacing */
+        }
+        /* Material Design checkbox style */
+        .checkbox {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .checkbox + label {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: #333; /* Dark gray */
+            border: 1px solid #333; /* Dark gray border */
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        .checkbox:checked + label::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 12px;
+            height: 12px;
+            background-color: #2196F3; /* Blue when checked */
+            border-radius: 2px;
+        }
+        .checkbox + label::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            border: 1px solid #333; /* Dark gray border */
+        }
+    </style>
+</head>
+<body>
+    <div class='column'>
+        <h2>Setup</h2>
+        <form action="/update" method="post">
+            <table>
+                <tr>
+                    <th>Setting</th>
+                    <th>Value</th>
+                </tr>
+                {% for key, value in config.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td><input type="text" name="{{ key }}" value="{{ value }}"></td>
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Save Config">
+        </form>
+
+        <h2>Notification App Control</h2>
+        <form action="/updateSchedule" method="post">
+            <table>
+                <tr>
+                    <td>Notification Period (minutes)</td>
+                    <td><input type="number" name="Schedule_Time" value="{{app['SCHEDULE_TIME']}}" min="1" max="60"></td>
+                </tr>
+            </table>
+            <input type="submit" value="Update Time">
+        </form>
+        <div class="control">
+            {% if app['ENABLE_NOTIFICATIONS'] == 'True' %}
+            <p>Notifications App Running</p>
+            <form action="/stopApplication" method="post">
+                <input type="submit" value="Stop Notifications App">
+            </form>
+            {% else %}
+            <p>Notifications App Stopped</p>
+            <form action="/startApplication" method="post">
+                <input type="submit" value="Start Notifications App">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class='column'>
+        <h2>Albums Notification Setup</h2>
+        {% if albums %}
+        <form action="/saveAlbums" method="post">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Monitor</th>
+                        <th>Name</th>
+                        <th>Topic</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in albums %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="{{ item['id'] }}_monitored" name="{{ item['id'] }}_monitored" class="checkbox" {% if item['monitored'] %}checked{% endif %}>
+                            <label for="{{ item['id'] }}_monitored"></label>
+                        </td>
+                        <td>{{ item['albumName'] }}</td>
+                        <td>
+                            <input type="text" id="{{ item['id'] }}_topic" name="{{ item['id'] }}_topic" class="topic" value="{{ item['topic'] }}" {% if not item['monitored'] %}style="display:none;"{% else %}style="display:block;"{% endif %}>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <input type="submit" value="Save Shared Albums">
+        </form>
+        <form action="/getAlbums" method="post">
+            <input type="submit" value="Refresh Albums">
+        </form>
+        <script>
+            // Get all checkbox elements
+            var checkboxes = document.querySelectorAll('.checkbox');
+
+            // Add event listener to each checkbox
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    var contentDiv = this.closest('tr').querySelector('.topic'); // Find the content div
+                    contentDiv.style.display = this.checked ? 'block' : 'none';
+                });
+            });
+        </script>
+        {% else %}
+        <form action="/getAlbums" method="post">
+            <input type="submit" value="Get Shared Albums">
+        </form>
+        {% endif %}
+        <div id="error-message" style="display: none; color: red; margin-bottom: 10px;">{{ error_message }}</div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const errorMessage = "{{ error_message }}"; // Replace with actual error message from Python
+                const errorMessageElement = document.getElementById("error-message");
+                if (errorMessage.trim() !== "") {
+                    errorMessageElement.textContent = errorMessage;
+                    errorMessageElement.style.display = "block";
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
